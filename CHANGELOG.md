@@ -28,3 +28,5 @@ supersedes: null
 - Phase 1 仓库结构、元数据规范、Schema、模板与 Catalog。
 - 六项初始 ADR 和无第三方依赖的统一仓库校验器。
 - Phase 0–1 任务记录与验收报告。
+- Phase 2 首批 20 个官方来源登记、8 个项目 Triage 与比较矩阵。
+- Phase 2 来源/项目引用完整性校验、任务记录与验收报告。

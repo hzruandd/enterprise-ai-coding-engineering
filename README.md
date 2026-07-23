@@ -1,7 +1,7 @@
 ---
 id: enterprise-ai-coding-engineering/readme
 title: Enterprise AI Coding Engineering
-version: 1.0.0
+version: 1.1.0
 status: REVIEWED
 recommendation: RECOMMENDED
 owner: Jake Ruan
@@ -22,7 +22,7 @@ supersedes: null
 
 ## 当前状态
 
-Phase 0（立项与边界）和 Phase 1（顶层架构与仓库骨架）已建立。当前内容定义项目边界、六个能力域、治理基线、三级资产准入、Schema、模板、ADR 和仓库校验；尚未开展 Phase 2 外部项目调研，也没有建设完整 Agent 平台。
+Phase 0（立项与边界）、Phase 1（顶层架构与仓库骨架）和 Phase 2 首批 Research/Triage 已完成。当前已登记 20 个官方来源，完成 8 个代表项目的 Triage 和比较；尚未开展 Candidate PoC、Full Review、Eval 基线或完整 Agent 平台建设。
 
 ## 唯一交付生命周期
 
@@ -49,6 +49,7 @@ Phase 0（立项与边界）和 Phase 1（顶层架构与仓库骨架）已建�
 - [文档地图](docs/README.md)、[研究区](research/README.md)、[Catalog](catalog/README.md)、[正式资产](assets/README.md)、[评测](evals/README.md)。
 - [架构决策记录](adr/README.md)。
 - [Phase 0–1 验收报告](reports/phase-0-1-acceptance.md)。
+- [Phase 2 验收报告](reports/phase-2-acceptance.md)与[首批 Triage 比较](research/comparisons/phase-2-initial-coding-agent-triage.md)。
 
 研究事实放入 `research/`，通过 Triage 的 Candidate 放入 `staging/`，完成真实验证、独立审查和许可证核验后才进入 `assets/`。三个区域不得混用。
 

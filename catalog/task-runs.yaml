@@ -1,5 +1,5 @@
 {
-  "schema_version": "0.1.0",
+  "schema_version": "0.2.0",
   "runs": [
     {
       "task_id": "TASK-PHASE-0-1-BOOTSTRAP",
@@ -63,6 +63,69 @@
         "catalog/schemas",
         "adr",
         "scripts/validate/validate_repository.py"
+      ],
+      "commit": null
+    },
+    {
+      "task_id": "TASK-PHASE-2-INITIAL-TRIAGE",
+      "project_id": "enterprise-ai-coding-engineering",
+      "run_id": "RUN-20260723-002",
+      "state": "DONE",
+      "triggered_by": "user",
+      "started_at": "2026-07-23T18:45:26+08:00",
+      "updated_at": "2026-07-23T18:47:13+08:00",
+      "permissions": ["READ", "WRITE_WORKTREE", "EXECUTE_SAFE", "GIT_COMMIT_LOCAL"],
+      "transitions": [
+        {
+          "at": "2026-07-23T18:45:26+08:00",
+          "actor": "user",
+          "from": null,
+          "to": "DRAFT",
+          "failure_type": null,
+          "evidence_refs": ["ROADMAP.md"]
+        },
+        {
+          "at": "2026-07-23T18:45:26+08:00",
+          "actor": "codex",
+          "from": "DRAFT",
+          "to": "RUNNING",
+          "failure_type": null,
+          "evidence_refs": ["reports/phase-2-task-status.md"]
+        },
+        {
+          "at": "2026-07-23T18:46:00+08:00",
+          "actor": "codex",
+          "from": "RUNNING",
+          "to": "VERIFYING",
+          "failure_type": null,
+          "evidence_refs": ["scripts/validate/validate_repository.py"]
+        },
+        {
+          "at": "2026-07-23T18:47:13+08:00",
+          "actor": "codex",
+          "from": "VERIFYING",
+          "to": "REVIEWING",
+          "failure_type": null,
+          "evidence_refs": ["reports/phase-2-task-status.md"]
+        },
+        {
+          "at": "2026-07-23T18:47:13+08:00",
+          "actor": "codex",
+          "from": "REVIEWING",
+          "to": "DONE",
+          "failure_type": null,
+          "evidence_refs": ["reports/phase-2-acceptance.md"]
+        }
+      ],
+      "evidence_refs": [
+        "reports/phase-2-task-status.md",
+        "reports/phase-2-acceptance.md"
+      ],
+      "artifact_refs": [
+        "catalog/sources.yaml",
+        "catalog/projects.yaml",
+        "research/projects",
+        "research/comparisons/phase-2-initial-coding-agent-triage.md"
       ],
       "commit": null
     }

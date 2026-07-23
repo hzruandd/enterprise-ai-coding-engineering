@@ -72,6 +72,21 @@ CATALOG_FILES = (
     "catalog/task-runs.yaml",
 )
 
+PHASE_2_REQUIRED_FILES = (
+    "research/sources/phase-2-initial-sources.md",
+    "research/comparisons/phase-2-initial-coding-agent-triage.md",
+    "research/projects/openai-codex-cli-triage.md",
+    "research/projects/anthropic-claude-code-triage.md",
+    "research/projects/github-copilot-cloud-agent-triage.md",
+    "research/projects/google-gemini-cli-triage.md",
+    "research/projects/openhands-triage.md",
+    "research/projects/mini-swe-agent-triage.md",
+    "research/projects/aider-triage.md",
+    "research/projects/continue-triage.md",
+    "reports/phase-2-task-status.md",
+    "reports/phase-2-acceptance.md",
+)
+
 MARKDOWN_METADATA_EXCLUSIONS = {
     "enterprise-ai-coding-harness-master-instruction-v3.0.md",
     *REQUIRED_TEMPLATES,
@@ -310,6 +325,7 @@ def validate_required_files(report: ValidationReport) -> None:
         "docs/overview/metadata-standard.md",
         "reports/phase-0-1-task-status.md",
         "scripts/validate/validate_repository.py",
+        *PHASE_2_REQUIRED_FILES,
     )
     for item in required:
         if not (REPOSITORY_ROOT / item).is_file():
@@ -409,22 +425,57 @@ def validate_catalogs(
 ) -> None:
     sources_path = REPOSITORY_ROOT / "catalog/sources.yaml"
     sources = load_json(sources_path, report)
+    source_ids: set[str] = set()
+    source_urls: set[str] = set()
     if validate_catalog_header(sources, sources_path, ("sources",), report):
         source_schema = schemas.get("source-registration.schema.json")
         seen_urls: dict[str, str] = {}
+        seen_source_ids: dict[str, str] = {}
         for index, entry in enumerate(sources["sources"]):
             location = f"catalog/sources.yaml.sources[{index}]"
             if source_schema:
                 validate_instance(entry, source_schema, location, report)
-            if isinstance(entry, dict) and isinstance(entry.get("url"), str):
-                normalized = normalized_url(entry["url"])
-                if normalized in seen_urls:
+            if isinstance(entry, dict):
+                source_id = entry.get("id")
+                if isinstance(source_id, str):
+                    if source_id in seen_source_ids:
+                        report.error(
+                            f"{location}: duplicate source id; first seen at "
+                            f"{seen_source_ids[source_id]}"
+                        )
+                    else:
+                        seen_source_ids[source_id] = location
+                        source_ids.add(source_id)
+                if isinstance(entry.get("url"), str):
+                    normalized = normalized_url(entry["url"])
+                    if normalized in seen_urls:
+                        report.error(
+                            f"{location}: duplicate source URL; first seen at "
+                            f"{seen_urls[normalized]}"
+                        )
+                    else:
+                        seen_urls[normalized] = location
+                        source_urls.add(normalized)
+                access_status = entry.get("access_status")
+                last_checked_at = entry.get("last_checked_at")
+                if access_status == "PENDING_CHECK" and last_checked_at is not None:
                     report.error(
-                        f"{location}: duplicate source URL; first seen at {seen_urls[normalized]}"
+                        f"{location}: PENDING_CHECK source cannot have last_checked_at"
                     )
-                else:
-                    seen_urls[normalized] = location
+                if access_status != "PENDING_CHECK" and last_checked_at is None:
+                    report.error(
+                        f"{location}: checked access status requires last_checked_at"
+                    )
             report.counts["catalog_entries"] += 1
+        for index, entry in enumerate(sources["sources"]):
+            if not isinstance(entry, dict):
+                continue
+            duplicate_of = entry.get("duplicate_of")
+            if duplicate_of is not None and duplicate_of not in source_ids:
+                report.error(
+                    f"catalog/sources.yaml.sources[{index}].duplicate_of: "
+                    f"unknown source id {duplicate_of!r}"
+                )
 
     projects_path = REPOSITORY_ROOT / "catalog/projects.yaml"
     projects = load_json(projects_path, report)
@@ -433,17 +484,58 @@ def validate_catalogs(
             ("triage", "project-triage.schema.json"),
             ("full_reviews", "project-full-review.schema.json"),
         )
+        seen_project_ids: dict[str, str] = {}
+        triage_ids: set[str] = set()
         for list_name, schema_name in mapping:
             schema = schemas.get(schema_name)
             for index, entry in enumerate(projects[list_name]):
+                location = f"catalog/projects.yaml.{list_name}[{index}]"
                 if schema:
                     validate_instance(
                         entry,
                         schema,
-                        f"catalog/projects.yaml.{list_name}[{index}]",
+                        location,
                         report,
                     )
+                if isinstance(entry, dict):
+                    project_id = entry.get("id")
+                    if isinstance(project_id, str):
+                        if project_id in seen_project_ids:
+                            report.error(
+                                f"{location}: duplicate project record id; first seen at "
+                                f"{seen_project_ids[project_id]}"
+                            )
+                        else:
+                            seen_project_ids[project_id] = location
+                        if list_name == "triage":
+                            triage_ids.add(project_id)
+                    evidence_refs = entry.get("evidence_refs", [])
+                    if isinstance(evidence_refs, list):
+                        for evidence_ref in evidence_refs:
+                            if evidence_ref not in source_ids:
+                                report.error(
+                                    f"{location}.evidence_refs: unknown source id "
+                                    f"{evidence_ref!r}"
+                                )
+                    official_url = entry.get("official_url")
+                    if (
+                        list_name == "triage"
+                        and isinstance(official_url, str)
+                        and normalized_url(official_url) not in source_urls
+                    ):
+                        report.error(
+                            f"{location}.official_url: URL is not registered in sources catalog"
+                        )
                 report.counts["catalog_entries"] += 1
+        for index, entry in enumerate(projects["full_reviews"]):
+            if (
+                isinstance(entry, dict)
+                and entry.get("triage_id") not in triage_ids
+            ):
+                report.error(
+                    f"catalog/projects.yaml.full_reviews[{index}].triage_id: "
+                    f"unknown triage id {entry.get('triage_id')!r}"
+                )
 
     assets_path = REPOSITORY_ROOT / "catalog/assets.yaml"
     assets = load_json(assets_path, report)

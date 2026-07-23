@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/asset.schema.json",
+  "title": "Executable asset contract",
+  "type": "object",
+  "required": [
+    "id", "name", "path", "asset_type", "lifecycle_stage", "status",
+    "recommendation", "goals", "non_goals", "triggers", "input_contract",
+    "output_contract", "prerequisites", "permissions", "steps",
+    "quality_gates", "failure_handling", "applicable_tools", "examples",
+    "eval_refs", "version", "change_log", "owner", "evidence_refs",
+    "security_notes", "cost_notes"
+  ],
+  "properties": {
+    "id": {"type": "string", "pattern": "^asset-[a-z0-9][a-z0-9-]*$"},
+    "name": {"type": "string", "minLength": 1},
+    "path": {"type": "string", "minLength": 1},
+    "asset_type": {"type": "string", "enum": ["PROMPT", "SKILL", "AGENT", "WORKFLOW", "GATE", "TEMPLATE", "POLICY"]},
+    "lifecycle_stage": {"type": "string", "enum": ["CANDIDATE", "VERIFIED"]},
+    "status": {"type": "string", "enum": ["DRAFT", "REVIEWED", "VERIFIED", "DEPRECATED", "ARCHIVED"]},
+    "recommendation": {"type": "string", "enum": ["RECOMMENDED", "CONDITIONAL", "NOT_RECOMMENDED", "NOT_APPLICABLE", "PENDING"]},
+    "goals": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "non_goals": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "triggers": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "input_contract": {"type": "object"},
+    "output_contract": {"type": "object"},
+    "prerequisites": {"type": "array", "items": {"type": "string"}},
+    "permissions": {"type": "array", "items": {"type": "string"}},
+    "steps": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "quality_gates": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "failure_handling": {"type": "object"},
+    "applicable_tools": {"type": "array", "items": {"type": "string"}},
+    "examples": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "eval_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "change_log": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "owner": {"type": "string", "minLength": 1},
+    "evidence_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "security_notes": {"type": "array", "items": {"type": "string"}},
+    "cost_notes": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}

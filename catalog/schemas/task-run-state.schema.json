@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/task-run-state.schema.json",
+  "title": "Task and Run state record",
+  "type": "object",
+  "required": [
+    "task_id", "project_id", "run_id", "state", "triggered_by",
+    "started_at", "updated_at", "permissions", "transitions",
+    "evidence_refs", "artifact_refs"
+  ],
+  "properties": {
+    "task_id": {"type": "string", "minLength": 1},
+    "project_id": {"type": "string", "minLength": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "state": {"type": "string", "enum": ["DRAFT", "READY", "RUNNING", "VERIFYING", "REVIEWING", "WAITING_APPROVAL", "DONE", "BLOCKED", "RETRYING", "FAILED", "CANCELLED", "ROLLED_BACK"]},
+    "triggered_by": {"type": "string", "minLength": 1},
+    "started_at": {"type": "string", "format": "date-time"},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "permissions": {"type": "array", "items": {"type": "string", "enum": ["READ", "WRITE_WORKTREE", "EXECUTE_SAFE", "GIT_COMMIT_LOCAL", "GIT_PUSH", "MERGE", "DEPLOY_NON_PROD", "PROD_CHANGE", "SECRET_ACCESS"]}},
+    "transitions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["at", "actor", "from", "to", "evidence_refs"],
+        "properties": {
+          "at": {"type": "string", "format": "date-time"},
+          "actor": {"type": "string", "minLength": 1},
+          "from": {"type": ["string", "null"]},
+          "to": {"type": "string"},
+          "failure_type": {"type": ["string", "null"], "enum": ["TRANSIENT", "TOOL_ERROR", "CODE_ERROR", "TEST_FAILURE", "POLICY_DENIED", "MISSING_CONTEXT", "BUDGET_EXCEEDED", "FATAL", null]},
+          "evidence_refs": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": false
+      }
+    },
+    "evidence_refs": {"type": "array", "items": {"type": "string"}},
+    "artifact_refs": {"type": "array", "items": {"type": "string"}},
+    "commit": {"type": ["string", "null"]}
+  },
+  "additionalProperties": false
+}

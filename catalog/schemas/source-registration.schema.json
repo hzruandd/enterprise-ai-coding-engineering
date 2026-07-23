@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/source-registration.schema.json",
+  "title": "External source registration",
+  "type": "object",
+  "required": ["id", "url", "source_type", "access_status", "user_note", "added_at", "owner"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^source-[a-z0-9][a-z0-9-]*$"},
+    "url": {"type": "string", "format": "uri"},
+    "source_type": {"type": "string", "enum": ["OFFICIAL_DOC", "SOURCE_CODE", "PAPER", "ARTICLE", "CASE_STUDY", "COMMUNITY", "OTHER"]},
+    "access_status": {"type": "string", "enum": ["PENDING_CHECK", "ACCESS_BLOCKED", "LOGIN_REQUIRED", "LINK_INVALID", "CONTENT_INCOMPLETE", "ACCESSIBLE"]},
+    "user_note": {"type": ["string", "null"]},
+    "added_at": {"type": "string", "format": "date"},
+    "last_checked_at": {"type": ["string", "null"], "format": "date"},
+    "owner": {"type": "string", "minLength": 1},
+    "duplicate_of": {"type": ["string", "null"]},
+    "evidence_level": {"type": "string", "enum": ["OFFICIAL", "EMPIRICAL", "INDUSTRY", "COMMUNITY", "INFERENCE"]}
+  },
+  "additionalProperties": false
+}

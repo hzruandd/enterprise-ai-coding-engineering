@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/project-triage.schema.json",
+  "title": "Project Triage record",
+  "type": "object",
+  "required": [
+    "id", "project_name", "official_url", "stage", "positioning",
+    "license_status", "maintenance_status", "applicable_scenarios",
+    "initial_action", "evidence_refs", "owner", "reviewed_at"
+  ],
+  "properties": {
+    "id": {"type": "string", "pattern": "^triage-[a-z0-9][a-z0-9-]*$"},
+    "project_name": {"type": "string", "minLength": 1},
+    "official_url": {"type": "string", "format": "uri"},
+    "stage": {"type": "string", "const": "RESEARCH"},
+    "positioning": {"type": "string", "minLength": 1},
+    "license_status": {"type": "string", "enum": ["VERIFIED", "UNVERIFIED", "NO_LICENSE", "AMBIGUOUS"]},
+    "license_expression": {"type": ["string", "null"]},
+    "maintenance_status": {"type": "string", "enum": ["ACTIVE", "LIMITED", "INACTIVE", "UNKNOWN"]},
+    "applicable_scenarios": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "initial_action": {"type": "string", "enum": ["REJECT", "WATCH", "FULL_REVIEW", "POC_CANDIDATE"]},
+    "evidence_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "owner": {"type": "string", "minLength": 1},
+    "reviewed_at": {"type": "string", "format": "date"}
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/project-full-review.schema.json",
+  "title": "Project Full Review record",
+  "type": "object",
+  "required": [
+    "id", "triage_id", "project_name", "stage", "architecture_summary",
+    "maintenance_evidence", "test_ci_evidence", "installation_result",
+    "security_risks", "commercial_risks", "alternatives", "poc_result",
+    "license_status", "recommendation", "evidence_refs", "owner", "reviewed_at"
+  ],
+  "properties": {
+    "id": {"type": "string", "pattern": "^full-review-[a-z0-9][a-z0-9-]*$"},
+    "triage_id": {"type": "string", "pattern": "^triage-[a-z0-9][a-z0-9-]*$"},
+    "project_name": {"type": "string", "minLength": 1},
+    "stage": {"type": "string", "const": "CANDIDATE"},
+    "architecture_summary": {"type": "string", "minLength": 1},
+    "maintenance_evidence": {"type": "string", "minLength": 1},
+    "test_ci_evidence": {"type": "string", "minLength": 1},
+    "installation_result": {"type": "string", "minLength": 1},
+    "security_risks": {"type": "array", "items": {"type": "string"}},
+    "commercial_risks": {"type": "array", "items": {"type": "string"}},
+    "alternatives": {"type": "array", "items": {"type": "string"}},
+    "poc_result": {"type": "string", "enum": ["PASS", "FAIL", "PARTIAL", "NOT_RUN"]},
+    "license_status": {"type": "string", "enum": ["VERIFIED", "UNVERIFIED", "NO_LICENSE", "AMBIGUOUS"]},
+    "recommendation": {"type": "string", "enum": ["RECOMMENDED", "CONDITIONAL", "NOT_RECOMMENDED", "PENDING"]},
+    "evidence_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "owner": {"type": "string", "minLength": 1},
+    "reviewed_at": {"type": "string", "format": "date"}
+  },
+  "additionalProperties": false
+}

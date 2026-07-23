@@ -1,0 +1,70 @@
+{
+  "schema_version": "0.1.0",
+  "runs": [
+    {
+      "task_id": "TASK-PHASE-0-1-BOOTSTRAP",
+      "project_id": "enterprise-ai-coding-engineering",
+      "run_id": "RUN-20260723-001",
+      "state": "DONE",
+      "triggered_by": "user",
+      "started_at": "2026-07-23T00:00:00+08:00",
+      "updated_at": "2026-07-23T18:24:19+08:00",
+      "permissions": ["READ", "WRITE_WORKTREE", "EXECUTE_SAFE", "GIT_COMMIT_LOCAL"],
+      "transitions": [
+        {
+          "at": "2026-07-23T00:00:00+08:00",
+          "actor": "user",
+          "from": null,
+          "to": "DRAFT",
+          "failure_type": null,
+          "evidence_refs": ["enterprise-ai-coding-harness-master-instruction-v3.0.md"]
+        },
+        {
+          "at": "2026-07-23T00:00:00+08:00",
+          "actor": "codex",
+          "from": "DRAFT",
+          "to": "RUNNING",
+          "failure_type": null,
+          "evidence_refs": ["reports/phase-0-1-task-status.md"]
+        },
+        {
+          "at": "2026-07-23T18:16:24+08:00",
+          "actor": "codex",
+          "from": "RUNNING",
+          "to": "VERIFYING",
+          "failure_type": null,
+          "evidence_refs": ["scripts/validate/validate_repository.py"]
+        },
+        {
+          "at": "2026-07-23T18:24:19+08:00",
+          "actor": "codex",
+          "from": "VERIFYING",
+          "to": "REVIEWING",
+          "failure_type": null,
+          "evidence_refs": ["reports/phase-0-1-task-status.md"]
+        },
+        {
+          "at": "2026-07-23T18:24:19+08:00",
+          "actor": "codex",
+          "from": "REVIEWING",
+          "to": "DONE",
+          "failure_type": null,
+          "evidence_refs": ["reports/phase-0-1-acceptance.md"]
+        }
+      ],
+      "evidence_refs": [
+        "reports/phase-0-1-task-status.md",
+        "reports/phase-0-1-acceptance.md"
+      ],
+      "artifact_refs": [
+        "README.md",
+        "PROJECT_CHARTER.md",
+        "GOVERNANCE.md",
+        "catalog/schemas",
+        "adr",
+        "scripts/validate/validate_repository.py"
+      ],
+      "commit": null
+    }
+  ]
+}
